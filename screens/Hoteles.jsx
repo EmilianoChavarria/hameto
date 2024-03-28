@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function Hoteles() {
     const [hoteles, setHoteles] = useState([]);
     const navigation = useNavigation();
-
+    const route = useRoute();
+    const { city } = route.params;
     useEffect(() => {
-        fetch('http://192.168.100.28:8080/api/hotel/')
+        fetch(`http://192.168.100.28:8080/api/hotel/${city}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
@@ -31,6 +32,8 @@ export default function Hoteles() {
         navigation.navigate('Hotel', { hotelId: hotelId });
     };
 
+
+    
     return (
         <View style={{ flex: 1, backgroundColor: '#fafafa' }}>
             <View className="flex flex-row p-8 pb-0 items-center mt-6 mb-2">
@@ -39,7 +42,7 @@ export default function Hoteles() {
                     <Icon name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
                 <Text className="text-2xl font-bold">
-                    Hoteles en Cancun
+                    Hoteles en {city}
                 </Text>
             </View>
             <ScrollView>

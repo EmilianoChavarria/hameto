@@ -1,14 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Modal, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Modal, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
 import { RadioButton } from 'react-native-paper';
+import moment from 'moment';
 
 
 export default function SignUp() {
   const navigation = useNavigation();
+  const [emailValue, setEmailValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+  const [nameValue, setNameValue] = useState('');
+  const [lastNameValue, setLastNameValue] = useState('');
+  const [surnameValue, setSurnameValue] = useState('');
+  const [curpValue, setCurpValue] = useState('');
+
+  const handleSignUp = async () => {
+    const formattedDate = moment(selectedStartDate, 'YYYY/MM/DD').format('YYYY-MM-DD');
+    const userData = {
+      email: emailValue,
+      password: passwordValue,
+      rol: { rolName: 'user' },
+      people: {
+        name: nameValue,
+        lastname: lastNameValue,
+        surname: surnameValue,
+        birthday: formattedDate,
+        curp: curpValue,
+        sex: gender
+      }
+    };
+
+    console.log(userData);
+
+    try {
+      const response = await fetch('http://192.168.100.28:8080/api/user/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (response.ok) {
+        Alert.alert('Registro exitoso', 'Usuario registrado exitosamente', [
+          { text: 'OK', onPress: () => navigation.navigate('Login') }
+        ]);        console.log('Usuario registrado exitosamente');
+      } else {
+        console.error('Error al registrar usuario');
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+    }
+  };
+
+
+
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const today = new Date();
 
@@ -29,6 +78,8 @@ export default function SignUp() {
   const handleOnCloseStartDatePicker = () => {
     setOpenStartDatePicker(false);
   };
+
+
 
   return (
     <View className="flex-1">
@@ -58,15 +109,23 @@ export default function SignUp() {
 
         </View>
         <View className="form space-y-2 px-0">
-          <TextInput placeholder="Nombre" className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" style={{ borderBottomWidth: 2, borderColor: '#4181E1', padding: 10 }} />
+          <TextInput placeholder="Nombre" className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" style={{ borderBottomWidth: 2, borderColor: '#4181E1', padding: 10 }} value={nameValue}
+            onChangeText={setNameValue} />
           <View style={{ flexDirection: 'row' }}>
-            <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12 mr-2" placeholder="Primer Apellido" style={{ flex: 1, borderBottomWidth: 2, borderColor: '#4181E1' }} />
-            <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" placeholder="Segundo Apellido" style={{ flex: 1, borderBottomWidth: 2, borderColor: '#4181E1' }} />
+            <TextInput value={lastNameValue}
+              onChangeText={setLastNameValue} className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12 mr-2" placeholder="Primer Apellido" style={{ flex: 1, borderBottomWidth: 2, borderColor: '#4181E1' }} />
+            <TextInput value={surnameValue}
+              onChangeText={setSurnameValue} className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" placeholder="Segundo Apellido" style={{ flex: 1, borderBottomWidth: 2, borderColor: '#4181E1' }} />
           </View>
-          <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12 " placeholder="Correo Electrónico" style={{ borderBottomWidth: 2, borderColor: '#4181E1', }} />
-          <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" placeholder="Contraseña" secureTextEntry style={{ borderBottomWidth: 2, borderColor: '#4181E1' }} />
+          <TextInput value={curpValue}
+            onChangeText={setCurpValue} placeholder="CURP" className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" style={{ borderBottomWidth: 2, borderColor: '#4181E1', padding: 10 }} />
 
-          <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+          <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12 " placeholder="Correo Electrónico" style={{ borderBottomWidth: 2, borderColor: '#4181E1', }} value={emailValue}
+            onChangeText={setEmailValue} />
+          <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" placeholder="Contraseña" secureTextEntry style={{ borderBottomWidth: 2, borderColor: '#4181E1' }} value={passwordValue}
+            onChangeText={setPasswordValue} />
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ marginRight: 10 }}>Sexo:</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <RadioButton
@@ -134,13 +193,13 @@ export default function SignUp() {
             </View>
           </Modal>
 
-          <TouchableOpacity className="py-3 bg-yellow-400 rounded-xl" onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity className="py-3 bg-yellow-400 rounded-xl" onPress={handleSignUp}>
             <Text className="font-xl font-bold text-center text-gray-700">
               Regístrate
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex-row justify-center mt-7">
+        <View className="flex-row justify-center ">
           <Text className="font-semibold">¿Ya tienes una cuenta? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text className="font-semibold text-yellow-400">Iniciar Sesión</Text>

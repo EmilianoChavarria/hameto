@@ -1,11 +1,24 @@
 import { View, ScrollView, Text, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Home() {
     //#1466C8
     const navigation = useNavigation();
+    const [ciudades, setCiudades] = useState([]);
+
+    useEffect(() => { 
+        fetch('http://192.168.100.28:8080/api/hotel/getCities')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'OK') {
+                setCiudades(data.data);
+            } else {
+                console.error('Error en la respuesta del servidor:', data.mensaje);
+            }
+        })
+    }, []);
 
 
     const imagenesEjemplo = [
@@ -86,10 +99,14 @@ export default function Home() {
         },
     ]
 
+    const goToHotels = (city) => {
+        navigation.navigate('Hoteles', { city: city });
+    };
+
+
 
     return (
         <View className="mt-20 px-2">
-
 
 
             {/* view de destinos */}
@@ -98,12 +115,12 @@ export default function Home() {
                 </Text>
                 <ScrollView horizontal={true} className="" showsHorizontalScrollIndicator={false}>
                     <View className="flex flex-row">
-                        {destinos.map((destino, index) => (
-                            <TouchableOpacity key={index} onPress={()=>navigation.navigate('Hoteles')}>
-                                <View  className="mr-4" style={{ width: 250, borderWidth: 1, borderColor: 'lightgray', height: 200, borderRadius: 20 }}>
-                                    <Image source={destino.imagen} style={{ width: '100%', height: '60%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
+                        {ciudades.map((ciudad, index) => (
+                            <TouchableOpacity key={index} onPress={() => goToHotels(ciudad)}>
+                                <View className="mr-4" style={{ width: 250, borderWidth: 1, borderColor: 'lightgray', height: 200, borderRadius: 20 }}>
+                                    <Image source={require('../assets/images/hotel.jpg')} style={{ width: '100%', height: '60%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
                                     <View style={{ padding: 16 }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 24 }}>{destino.nombre}</Text>
+                                        <Text style={{ fontWeight: 'bold', fontSize: 24 }}>{ciudad}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>

@@ -25,7 +25,7 @@ export default function App() {
         <Stack.Screen name="Bottomtab" component={BottomTab} screenOptions={{headerShown: false}}/>
         <Stack.Screen name="Hoteles" component={Hoteles} screenOptions={{headerShown: false}}/>
         <Stack.Screen name="Hotel" component={Hotel} screenOptions={{headerShown: false}}/>
-        <Stack.Screen name="Rooms" component={Habitacion} screenOptions={{headerShown: false}}/>
+        <Stack.Screen name="Room" component={Habitacion} screenOptions={{headerShown: false}}/>
         <Stack.Screen name="Ej" component={Ejemplo} screenOptions={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>

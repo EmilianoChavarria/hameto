@@ -45,6 +45,10 @@ export default function Buscar() {
     setFilteredData(hoteles);
   };
 
+  const goToHotelDetail = (hotelId) => {
+    navigation.navigate('Hotel', { hotelId: hotelId });
+};
+
   return (
     <View>
       <View className="px-6 mt-8 flex flex-row items-center mb-2">
@@ -66,7 +70,7 @@ export default function Buscar() {
             </View>
           ) : (
             filteredData.map((hotel, index) => (
-              <TouchableOpacity key={index} onPress={() => navigation.navigate('Hotel')} style={{ marginBottom: 8 }}>
+              <TouchableOpacity key={index} onPress={() => goToHotelDetail(hotel.hotelId)} style={{ marginBottom: 8 }}>
                 <View style={{ width: 335, height: 106, borderRadius: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 1, shadowRadius: 8, elevation: 3, flexDirection: 'row', backgroundColor: '#ffffff' }}>
                   <View style={{ padding: 8 }}>
                     <Image source={require('../assets/images/hotel.jpg')} style={{ borderRadius: 15, width: 110, height: 90 }} />
