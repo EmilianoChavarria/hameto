@@ -1,9 +1,12 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Welcome() {
+    
+    
     const navigation = useNavigation();
     return (
         <View className="flex-1 bg-white">
@@ -16,8 +19,8 @@ export default function Welcome() {
                 <View className="space-y-4">
                     <TouchableOpacity onPress={() => navigation.navigate('SignUp')} className="py-3 bg-yellow-400 mx-7 rounded-xl">
                         <Text className="text-xl font-bold text-center text-gray-700">
-                            Regístrate                        
-                            </Text>
+                            Regístrate
+                        </Text>
                     </TouchableOpacity>
                     <View className="flex-row justify-center">
                         <Text className="font-semibold">¿Ya tienes una cuenta? </Text>

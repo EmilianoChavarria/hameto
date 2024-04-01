@@ -1,15 +1,63 @@
-import { View, Text, Image } from 'react-native';
-import React from 'react';
+import { View, Text, Image, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { URL } from './ip';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
     const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        const checkUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('userData');
+                if (userData !== null) {
+                    // Usuario ya ha iniciado sesión anteriormente, puedes usar los datos de usuario guardados
+                    setNombreUsuario(JSON.parse(userData).name); // o cualquier otra información que necesites
+                }
+            } catch (error) {
+                console.log('Error al recuperar los datos de usuario:', error);
+            }
+        };
+
+        checkUserData();
+    }, []);
+    const handleLogin = () => {
+        fetch(URL+'api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.status === 'OK') {
+                    // Usuario autenticado correctamente
+                    // Aquí puedes redirigir a la siguiente pantalla o realizar otras acciones
+                    // console.log('Usuario autenticado:', data.data);
+                    // navigation.navigate('Bottomtab');
+                    AsyncStorage.setItem('userData', JSON.stringify(data.data.people));
+                    Alert.alert('Inicion Sesiada', 'Inicio de Sesión exitoso', [
+                        { text: 'OK', onPress: () => navigation.navigate('Bottomtab', {screen: 'Home', params: { userData: data.data.people }}) }
+                      ]);       
+                      console.log('Usuario autenticado:', data.data);
+                } else {
+                    // esto muestra el mensaje de error desde mi servidor
+                    Alert.alert('Error', data.mensaje);
+                }
+            })
+            .catch(error => {
+                console.error('Error al iniciar sesión:', error);
+            });
+    };
 
 
-
-    
     return (
         <View className="flex-1 ">
             <View className="flex">
@@ -42,15 +90,16 @@ export default function Login() {
                 </View>
                 <View className="form space-y-2">
                     <Text className="text-gray-700 ml-4">Email</Text>
-                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3" placeholder="ejemplo@gmail.com" />
+                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3" placeholder="ejemplo@gmail.com" value={email} onChangeText={setEmail} />
                     <Text className="text-gray-700 ml-4">Contraseña</Text>
-                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl" secureTextEntry placeholder="Contraseña" />
+                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl" secureTextEntry placeholder="Contraseña" value={password} onChangeText={setPassword}/>
                     <TouchableOpacity className="flex items-end mb-5">
                         <Text className="text-gray-500">
                             ¿Olvidaste tu contraseña?
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="py-3 bg-yellow-400 rounded-xl" onPress={()=>navigation.navigate('Bottomtab')}>
+                    {/* onPress={() => navigation.navigate('Bottomtab')} */}
+                    <TouchableOpacity className="py-3 bg-yellow-400 rounded-xl" onPress={handleLogin}>
                         <Text className="font-xl font-bold text-center text-gray-700">
                             Iniciar Sesión
                         </Text>

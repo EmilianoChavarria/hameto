@@ -3,6 +3,7 @@ import { View, Text, TextInput, Image, ScrollView, ActivityIndicator } from 'rea
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { URL } from './ip';
 
 export default function Buscar() {
   const navigation = useNavigation();
@@ -10,9 +11,8 @@ export default function Buscar() {
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    fetch('http://192.168.100.28:8080/api/hotel/')
+    fetch(URL+'api/hotel/')
       .then(response => response.json())
       .then(data => {
         if (data.status === 'OK') {

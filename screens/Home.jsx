@@ -1,16 +1,36 @@
 import { View, ScrollView, Text, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { URL } from './ip';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Home() {
     //#1466C8
     const navigation = useNavigation();
+    const route = useRoute();
+
     const [ciudades, setCiudades] = useState([]);
+    const [nombreUsuario, setNombreUsuario] = useState('');
+
     useEffect(() => {
-        fetch(URL+'api/hotel/getCities')
+        const checkUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('userData');
+                if (userData !== null) {
+                    // Usuario ya ha iniciado sesión anteriormente, puedes usar los datos de usuario guardados
+                    setNombreUsuario(JSON.parse(userData).name); // o cualquier otra información que necesites
+                }
+            } catch (error) {
+                console.log('Error al recuperar los datos de usuario:', error);
+            }
+        };
+
+        checkUserData();
+
+
+        fetch(URL + 'api/hotel/getCities')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
@@ -18,7 +38,12 @@ export default function Home() {
                 } else {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
-            })
+            });
+        const { name } = route.params?.userData || {};
+        if (name) {
+            setNombreUsuario(name);
+        }
+
     }, []);
 
 
@@ -66,6 +91,8 @@ export default function Home() {
 
             {/* view de destinos */}
             <View>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>Hola, {nombreUsuario}</Text>
+
                 <Text className="font-bold text-xl mb-4">Descubre hospedajes en destinos populares
                 </Text>
                 <ScrollView horizontal={true} className="" showsHorizontalScrollIndicator={false}>

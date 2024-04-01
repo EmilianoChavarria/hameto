@@ -55,7 +55,7 @@ export default function BottomTab() {
                     </View>
                 )
             }} />
-            <Tab.Screen name="Pagos" component={Pagos} options={{
+            <Tab.Screen name="Perfil" component={Pagos} options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
                         <Iconss name="wallet" size={20} color="black" style={{ color: focused ? '#e32f45' : '#748c94'}}/>

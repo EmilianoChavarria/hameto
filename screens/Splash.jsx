@@ -9,8 +9,8 @@ const Splash = () => {
     const navigation = useNavigation();
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            navigation.replace('Welcome')
-        }, 3000)
+            navigation.replace('Bottomtab')
+        }, 2000)
         return () => clearTimeout(timeoutId);
     }, [navigation])
     return (

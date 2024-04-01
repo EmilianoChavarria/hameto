@@ -35,7 +35,6 @@ export default function SignUp() {
     };
 
     console.log(userData);
-
     try {
       const response = await fetch(URL+'api/user/save', {
         method: 'POST',
