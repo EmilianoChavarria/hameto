@@ -17,12 +17,12 @@ export default function Perfil({ navigation }) {
             }
         };
         fetchUserData();
-    }, []); // No incluyas userData en la dependencia
+    }, []);
 
     const logout = async () => {
         try {
             await AsyncStorage.removeItem('userData');
-            setUserData(null); // Actualiza el estado para reflejar que el usuario se ha cerrado sesión
+            setUserData(null); 
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home', params: { userData: null } }],
