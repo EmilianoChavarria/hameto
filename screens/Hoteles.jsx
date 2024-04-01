@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { URL } from './ip';
 
 export default function Hoteles() {
     const [hoteles, setHoteles] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     const route = useRoute();
     const { city } = route.params;
+
     useEffect(() => {
-        fetch(`http://192.168.100.28:8080/api/hotel/${city}`)
+        fetch(URL+`api/hotel/${city}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
@@ -18,7 +21,8 @@ export default function Hoteles() {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
             })
-            .catch(error => console.error('Error al obtener los datos:', error));
+            .catch(error => console.error('Error al obtener los datos:', error))
+            .finally(() => setLoading(false));
     }, []);
 
     const truncateDescription = (description, maxLength) => {
@@ -31,9 +35,14 @@ export default function Hoteles() {
     const goToHotelDetail = (hotelId) => {
         navigation.navigate('Hotel', { hotelId: hotelId });
     };
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
-
-    
     return (
         <View style={{ flex: 1, backgroundColor: '#fafafa' }}>
             <View className="flex flex-row p-8 pb-0 items-center mt-6 mb-2">

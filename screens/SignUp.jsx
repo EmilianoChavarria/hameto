@@ -6,6 +6,7 @@ import DatePicker from 'react-native-modern-datepicker';
 import { getFormatedDate } from 'react-native-modern-datepicker';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
+import { URL } from './ip';
 
 
 export default function SignUp() {
@@ -36,7 +37,7 @@ export default function SignUp() {
     console.log(userData);
 
     try {
-      const response = await fetch('http://192.168.100.28:8080/api/user/save', {
+      const response = await fetch(URL+'api/user/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

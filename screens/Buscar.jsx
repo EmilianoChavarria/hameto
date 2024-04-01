@@ -1,5 +1,5 @@
-import { View, Text, TextInput, Image, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, Image, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +9,7 @@ export default function Buscar() {
   const [hoteles, setHoteles] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('http://192.168.100.28:8080/api/hotel/')
@@ -22,7 +22,8 @@ export default function Buscar() {
           console.error('Error en la respuesta del servidor:', data.mensaje);
         }
       })
-      .catch(error => console.error('Error al obtener los datos:', error));
+      .catch(error => console.error('Error al obtener los datos:', error))
+      .finally(() => setLoading(false));
   }, []);
 
   const truncateDescription = (description, maxLength) => {
@@ -47,7 +48,15 @@ export default function Buscar() {
 
   const goToHotelDetail = (hotelId) => {
     navigation.navigate('Hotel', { hotelId: hotelId });
-};
+  };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -55,8 +64,8 @@ export default function Buscar() {
         <Icon name="search" size={20} color="#555" style={{ marginRight: 10 }} />
         <TextInput className="p-4 bg-gray-300 text-gray-700 rounded-2xl w-10/12" placeholder="Buscar Hotel" value={searchTerm}
           onChangeText={handleSearch} />
-          {searchTerm !== '' && (
-          <TouchableOpacity onPress={clearSearch} style={{ paddingHorizontal: 10}}>
+        {searchTerm !== '' && (
+          <TouchableOpacity onPress={clearSearch} style={{ paddingHorizontal: 10 }}>
             <Icon name="times" size={20} color="#555" />
           </TouchableOpacity>
         )}
@@ -66,7 +75,7 @@ export default function Buscar() {
           {filteredData.length === 0 ? (
             <View className="flex items-center">
               <Text className="mt-10" style={{ fontSize: 22, fontWeight: 'bold', color: '#555' }}>No se han encontrado hoteles</Text>
-              <Image source={require('../assets/images/errorHotel.png')} style={{ borderRadius: 15, width: 110, height: 300, width:300 }} />
+              <Image source={require('../assets/images/errorHotel.png')} style={{ borderRadius: 15, width: 110, height: 300, width: 300 }} />
             </View>
           ) : (
             filteredData.map((hotel, index) => (
@@ -88,5 +97,4 @@ export default function Buscar() {
       </ScrollView>
     </View>
   )
-
 }

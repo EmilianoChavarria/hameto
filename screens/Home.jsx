@@ -2,39 +2,27 @@ import { View, ScrollView, Text, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { URL } from './ip';
+
 
 export default function Home() {
     //#1466C8
     const navigation = useNavigation();
     const [ciudades, setCiudades] = useState([]);
-
-    useEffect(() => { 
-        fetch('http://192.168.100.28:8080/api/hotel/getCities')
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'OK') {
-                setCiudades(data.data);
-            } else {
-                console.error('Error en la respuesta del servidor:', data.mensaje);
-            }
-        })
+    useEffect(() => {
+        fetch(URL+'api/hotel/getCities')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'OK') {
+                    setCiudades(data.data);
+                } else {
+                    console.error('Error en la respuesta del servidor:', data.mensaje);
+                }
+            })
     }, []);
 
 
-    const imagenesEjemplo = [
-        {
-            imagen: require('../assets/images/imagen1.jpg'),
-            nombre: "Ejemplo 1",
-        },
-        {
-            imagen: require('../assets/images/imagen2.jpg'),
-            nombre: "Ejemplo 2",
-        },
-        {
-            imagen: require('../assets/images/imagen3.jpg'),
-            nombre: "Ejemplo 3",
-        },
-    ];
+
 
     const servicios = [
         {
@@ -64,40 +52,7 @@ export default function Home() {
         },
     ]
 
-    const destinos = [
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Cancún",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Acapulco",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Sonora",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "New York",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Las Vegas",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Los Ángeles",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Miami",
-        },
-        {
-            imagen: require('../assets/images/hotel.jpg'),
-            nombre: "Orlando",
-        },
-    ]
+
 
     const goToHotels = (city) => {
         navigation.navigate('Hoteles', { city: city });

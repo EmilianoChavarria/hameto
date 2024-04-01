@@ -3,6 +3,7 @@ import { View, ScrollView, ImageBackground, Animated, useWindowDimensions, Style
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
+import { URL } from './ip';
 
 export default function Hotel() {
     const [hotel, setHotel] = useState([]);
@@ -22,7 +23,7 @@ export default function Hotel() {
     const { hotelId } = route.params;
 
     useEffect(() => {
-        fetch(`http://192.168.100.28:8080/api/hotel/findOne/${hotelId}`)
+        fetch(URL+`api/hotel/findOne/${hotelId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
@@ -33,7 +34,7 @@ export default function Hotel() {
             })
             .catch(error => console.error('Error al obtener los datos del hotel:', error));
 
-        fetch(`http://192.168.100.28:8080/api/room/getByHotel/${hotelId}`)
+        fetch(URL+`api/room/getByHotel/${hotelId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {

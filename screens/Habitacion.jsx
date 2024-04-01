@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, Animated, useWindowDimensions
 import React, { useEffect, useRef, useState } from 'react'
 import Icon from 'react-native-vector-icons/Entypo';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { URL } from './ip';
 
 export default function Habitacion() {
     const [habitaciones, setHabitaciones] = useState([]);
@@ -18,7 +19,7 @@ export default function Habitacion() {
 
 
     useEffect(() => {
-        fetch(`http://192.168.100.28:8080/api/room/findOneRoom/${roomId}`)
+        fetch(URL+`api/room/findOneRoom/${roomId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
