@@ -12,15 +12,16 @@ export default function Home() {
     const route = useRoute();
 
     const [ciudades, setCiudades] = useState([]);
-    const [nombreUsuario, setNombreUsuario] = useState('');
+    const [nombreUsuario, setNombreUsuario] = useState(route.params?.userData?.name || '');
 
     useEffect(() => {
+        setNombreUsuario(route.params?.userData?.name || '');
+
         const checkUserData = async () => {
             try {
                 const userData = await AsyncStorage.getItem('userData');
                 if (userData !== null) {
-                    // Usuario ya ha iniciado sesión anteriormente, puedes usar los datos de usuario guardados
-                    setNombreUsuario(JSON.parse(userData).name); // o cualquier otra información que necesites
+                    setNombreUsuario(JSON.parse(userData).name); 
                 }
             } catch (error) {
                 console.log('Error al recuperar los datos de usuario:', error);
@@ -44,7 +45,7 @@ export default function Home() {
             setNombreUsuario(name);
         }
 
-    }, []);
+    }, [route.params?.userData?.name]);
 
 
 
@@ -91,7 +92,13 @@ export default function Home() {
 
             {/* view de destinos */}
             <View>
-                <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>Hola, {nombreUsuario}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>Hola {nombreUsuario}</Text>
+
+                {!nombreUsuario && (
+                <TouchableOpacity onPress={()=>navigation.navigate('Welcome')} style={{ backgroundColor: 'blue', padding: 10, borderRadius: 5, marginBottom: 10 }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Iniciar sesión</Text>
+                </TouchableOpacity>
+            )}
 
                 <Text className="font-bold text-xl mb-4">Descubre hospedajes en destinos populares
                 </Text>

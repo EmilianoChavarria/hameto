@@ -38,17 +38,12 @@ export default function Login() {
             .then(data => {
                 console.log(data);
                 if (data.status === 'OK') {
-                    // Usuario autenticado correctamente
-                    // Aquí puedes redirigir a la siguiente pantalla o realizar otras acciones
-                    // console.log('Usuario autenticado:', data.data);
-                    // navigation.navigate('Bottomtab');
                     AsyncStorage.setItem('userData', JSON.stringify(data.data.people));
                     Alert.alert('Inicion Sesiada', 'Inicio de Sesión exitoso', [
-                        { text: 'OK', onPress: () => navigation.navigate('Bottomtab', {screen: 'Home', params: { userData: data.data.people }}) }
-                      ]);       
-                      console.log('Usuario autenticado:', data.data);
+                        { text: 'OK', onPress: () => navigation.navigate('Bottomtab', { screen: 'Home', params: { userData: data.data.people }}) }
+                    ]);       
+                    console.log('Usuario autenticado:', data.data);
                 } else {
-                    // esto muestra el mensaje de error desde mi servidor
                     Alert.alert('Error', data.mensaje);
                 }
             })
@@ -56,6 +51,7 @@ export default function Login() {
                 console.error('Error al iniciar sesión:', error);
             });
     };
+    
 
 
     return (

@@ -5,10 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import Home from './Home';
 import Buscar from './Buscar';
 import Reservaciones from './Reservaciones';
-import Pagos from './Pagos';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icons from 'react-native-vector-icons/FontAwesome5';
-import Iconss from 'react-native-vector-icons/SimpleLineIcons';
+import Iconss from 'react-native-vector-icons/MaterialIcons';
+import Perfil from './Perfil';
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -55,11 +55,11 @@ export default function BottomTab() {
                     </View>
                 )
             }} />
-            <Tab.Screen name="Perfil" component={Pagos} options={{
+            <Tab.Screen name="Perfil" component={Perfil} options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
-                        <Iconss name="wallet" size={20} color="black" style={{ color: focused ? '#e32f45' : '#748c94'}}/>
-                        <Text style={{ color: focused ? '#e32f45' : '#748c94', fontSize: 12 }}>Pagos</Text>
+                        <Iconss name="face" size={20} color="black" style={{ color: focused ? '#e32f45' : '#748c94'}}/>
+                        <Text style={{ color: focused ? '#e32f45' : '#748c94', fontSize: 12 }}>Perfil</Text>
                     </View>
                 )
             }} />

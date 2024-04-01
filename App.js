@@ -8,7 +8,6 @@ import Login from './screens/Login';
 import BottomTab from './screens/BottomTab';
 import Buscar from './screens/Buscar';
 import Reservaciones from './screens/Reservaciones';
-import Pagos from './screens/Pagos';
 import Hoteles from './screens/Hoteles';
 import Hotel from './screens/Hotel';
 import Habitacion from './screens/Habitacion';
