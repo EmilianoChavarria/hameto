@@ -155,7 +155,7 @@ export default function Habitacion() {
                         </View>
                         <View className="border rounded-lg mt-8 pt-4 flex flex-row " >
                             <Text className="px-4 pb-4 font-bold text-2xl"> MXN $1,234</Text>
-                            <TouchableOpacity className="items-center bg-yellow-400 rounded-lg w-32 h-10">
+                            <TouchableOpacity className="items-center bg-yellow-400 rounded-lg w-32 h-10" >
                                     <Text className="text-center text-lg font-bold mt-1">Reservar</Text>
                             </TouchableOpacity>
                         </View>
