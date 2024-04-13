@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
     const navigation = useNavigation();
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     useEffect(() => {
@@ -16,8 +16,7 @@ export default function Login() {
             try {
                 const userData = await AsyncStorage.getItem('userData');
                 if (userData !== null) {
-                    // Usuario ya ha iniciado sesión anteriormente, puedes usar los datos de usuario guardados
-                    setNombreUsuario(JSON.parse(userData).name); // o cualquier otra información que necesites
+                    setNombreUsuario(JSON.parse(userData).name); 
                 }
             } catch (error) {
                 console.log('Error al recuperar los datos de usuario:', error);
@@ -27,18 +26,22 @@ export default function Login() {
         checkUserData();
     }, []);
     const handleLogin = () => {
-        fetch(URL+'api/user/login', {
+        if (!username || !password) {
+            Alert.alert('Campos Vacíos', 'Por favor completa todos los campos');
+            return;
+        }
+        fetch(URL+'api/auth/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ username, password })
         })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
                 if (data.status === 'OK') {
-                    AsyncStorage.setItem('userData', JSON.stringify(data.data.people));
+                    AsyncStorage.setItem('userData', JSON.stringify(data.data));
                     Alert.alert('Inicion Sesiada', 'Inicio de Sesión exitoso', [
                         { text: 'OK', onPress: () => navigation.navigate('Bottomtab', { screen: 'Home', params: { userData: data.data.people }}) }
                     ]);       
@@ -52,6 +55,7 @@ export default function Login() {
             });
     };
     
+    
 
 
     return (
@@ -64,7 +68,7 @@ export default function Login() {
                     </TouchableOpacity> */}
                 </View>
                 <View className="justify-center items-center h-72 relative">
-                    <Image className="opacity-75" source={require("../assets/images/hotel.jpg")} style={{ borderBottomLeftRadius: 50, borderBottomRightRadius: 50, width: '100%', height: '100%', resizeMode: 'cover' }} />
+                    <Image className="opacity-75" source={require("../assets/images/hotel-1.jpg")} style={{ borderBottomLeftRadius: 50, borderBottomRightRadius: 50, width: '100%', height: '100%', resizeMode: 'cover' }} />
                     <View className="absolute inset-0 flex flex-row justify-center items-center">
                         <Image className="mr-4" source={require("../assets/images/hotel.png")} style={{ width: 65, height: 70 }} />
                         <Text className="text-white text-4xl font-bold text-center">Hotel Ameto</Text>
@@ -86,7 +90,7 @@ export default function Login() {
                 </View>
                 <View className="form space-y-2">
                     <Text className="text-gray-700 ml-4">Email</Text>
-                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3" placeholder="ejemplo@gmail.com" value={email} onChangeText={setEmail} />
+                    <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3" placeholder="ejemplo@gmail.com" value={username} onChangeText={setUsername} />
                     <Text className="text-gray-700 ml-4">Contraseña</Text>
                     <TextInput className="p-4 bg-gray-100 text-gray-700 rounded-2xl" secureTextEntry placeholder="Contraseña" value={password} onChangeText={setPassword}/>
                     <TouchableOpacity className="flex items-end mb-5">

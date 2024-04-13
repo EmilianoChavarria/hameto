@@ -12,7 +12,7 @@ export default function Buscar() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch(URL+'api/hotel/')
+    fetch(URL+'api/hotel/getAll')
       .then(response => response.json())
       .then(data => {
         if (data.status === 'OK') {
@@ -82,7 +82,7 @@ export default function Buscar() {
               <TouchableOpacity key={index} onPress={() => goToHotelDetail(hotel.hotelId)} style={{ marginBottom: 8 }}>
                 <View style={{ width: 335, height: 106, borderRadius: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 1, shadowRadius: 8, elevation: 3, flexDirection: 'row', backgroundColor: '#ffffff' }}>
                   <View style={{ padding: 8 }}>
-                    <Image source={require('../assets/images/hotel.jpg')} style={{ borderRadius: 15, width: 110, height: 90 }} />
+                    <Image source={require('../assets/images/hotel-1.jpg')} style={{ borderRadius: 15, width: 110, height: 90 }} />
                   </View>
                   <View style={{ padding: 8, flex: 1 }}>
                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{hotel.hotelName}</Text>

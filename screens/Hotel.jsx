@@ -8,13 +8,14 @@ import { URL } from './ip';
 export default function Hotel() {
     const [hotel, setHotel] = useState([]);
     const [habitaciones, setHabitaciones] = useState([]);
+    const [images, setImages] = useState([]);
 
     //esto es del carrusel
-    const images = [
-        'https://foodandtravel.mx/wp-content/uploads/2020/06/Reapertura-hoteles-por.jpg',
-        'https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg',
-        'https://cdn.forbes.com.mx/2020/07/hoteles-Grand-Velas-Resorts-e1596047698604.jpg',
-    ];
+    // const images = [
+    //     'https://foodandtravel.mx/wp-content/uploads/2020/06/Reapertura-hoteles-por.jpg',
+    //     'https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg',
+    //     'https://cdn.forbes.com.mx/2020/07/hoteles-Grand-Velas-Resorts-e1596047698604.jpg',
+    // ];
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width: windowWidth } = useWindowDimensions();
     //------------------------------------------------------------------------------------------------
@@ -23,18 +24,21 @@ export default function Hotel() {
     const { hotelId } = route.params;
 
     useEffect(() => {
-        fetch(URL+`api/hotel/findOne/${hotelId}`)
+        fetch(URL + `api/hotel/findOne/${hotelId}`)
             .then(response => response.json())
             .then(data => {
+                console.log("Respuesta de la API para hotel:", data);
+
                 if (data.status === 'OK') {
                     setHotel(data.data);
+                    setImages(data.data.images);
                 } else {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
             })
             .catch(error => console.error('Error al obtener los datos del hotel:', error));
 
-        fetch(URL+`api/room/getByHotel/${hotelId}`)
+        fetch(URL + `api/room/getByHotel/${hotelId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'OK') {
@@ -86,8 +90,8 @@ export default function Hotel() {
                         scrollEventThrottle={1}>
                         {images.map((image, imageIndex) => {
                             return (
-                                <View style={{ width: windowWidth, height: 250, overflow: 'hidden' }} key={imageIndex}>
-                                    <ImageBackground source={{ uri: image }} style={[styles.card, { width: windowWidth }]} />
+                                <View style={{ width: windowWidth, height: 350, overflow: 'hidden' }} key={imageIndex}>
+                                    <ImageBackground source={{ uri: `data:image/png;base64,${image.image}` }} style={[styles.card, { width: windowWidth }]} />
                                 </View>
                             );
                         })}
@@ -137,7 +141,7 @@ export default function Hotel() {
                         Habitaciones disponibles
                     </Text>
                     {habitaciones.map(habitacion => (
-                        
+
                         <TouchableOpacity key={habitacion.roomId} onPress={() => goToRoom(habitacion.roomId)}>
                             {/* card por habitación */}
                             <View className="bg-white mb-4" style={{ width: '100%', borderRadius: 20 }}>
@@ -162,7 +166,7 @@ export default function Hotel() {
                                 </View>
                                 <View className="border-t border-gray-300 w-full py-4">
                                     <Text className="px-4 pb-4 font-bold text-2xl"> MXN $1,234</Text>
-                                    <TouchableOpacity className="flex items-center">
+                                    <TouchableOpacity className="flex items-center" onPress={()=> navigation.navigate('Reservacion')}>
                                         <Text className="text-center text-black bg-yellow-400 p-2 rounded-xl w-11/12">
                                             Reservar
                                         </Text>

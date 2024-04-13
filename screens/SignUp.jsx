@@ -19,11 +19,15 @@ export default function SignUp() {
   const [curpValue, setCurpValue] = useState('');
 
   const handleSignUp = async () => {
+    if (!emailValue || !passwordValue || !nameValue || !lastNameValue || !surnameValue || !curpValue) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    } 
     const formattedDate = moment(selectedStartDate, 'YYYY/MM/DD').format('YYYY-MM-DD');
     const userData = {
       email: emailValue,
       password: passwordValue,
-      rol: { rolName: 'user' },
+      rol: { rolName: 'USER_ROLE' },
       people: {
         name: nameValue,
         lastname: lastNameValue,
@@ -87,7 +91,7 @@ export default function SignUp() {
 
 
         <View className="justify-center items-center h-52 relative">
-          <Image className="opacity-75" source={require("../assets/images/hotel.jpg")} style={{ borderBottomLeftRadius: 50, borderBottomRightRadius: 50, width: '100%', height: '100%', resizeMode: 'cover' }} />
+          <Image className="opacity-75" source={require("../assets/images/hotel-1.jpg")} style={{ borderBottomLeftRadius: 50, borderBottomRightRadius: 50, width: '100%', height: '100%', resizeMode: 'cover' }} />
           <View className="absolute inset-0 flex flex-row justify-center items-center">
             <Image className="mr-4" source={require("../assets/images/hotel.png")} style={{ width: 65, height: 70 }} />
             <Text className="text-white text-4xl font-bold text-center">Hotel Ameto</Text>

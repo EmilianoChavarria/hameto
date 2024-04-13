@@ -21,7 +21,7 @@ export default function Home() {
             try {
                 const userData = await AsyncStorage.getItem('userData');
                 if (userData !== null) {
-                    setNombreUsuario(JSON.parse(userData).name); 
+                    setNombreUsuario(JSON.parse(userData).people.name); 
                 }
             } catch (error) {
                 console.log('Error al recuperar los datos de usuario:', error);
@@ -107,7 +107,7 @@ export default function Home() {
                         {ciudades.map((ciudad, index) => (
                             <TouchableOpacity key={index} onPress={() => goToHotels(ciudad)}>
                                 <View className="mr-4" style={{ width: 250, borderWidth: 1, borderColor: 'lightgray', height: 200, borderRadius: 20 }}>
-                                    <Image source={require('../assets/images/hotel.jpg')} style={{ width: '100%', height: '60%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
+                                    <Image source={require('../assets/images/hotel-1.jpg')} style={{ width: '100%', height: '60%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
                                     <View style={{ padding: 16 }}>
                                         <Text style={{ fontWeight: 'bold', fontSize: 24 }}>{ciudad}</Text>
                                     </View>

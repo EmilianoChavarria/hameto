@@ -45,7 +45,7 @@ export default function Hoteles() {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fafafa' }}>
-            <View className="flex flex-row p-8 pb-0 items-center mt-6 mb-2">
+            <View className="flex flex-row p-8 pb-0 items-center mt-6 mb-2" style={{width: '95%'}}>
                 <TouchableOpacity className="bg-yellow-400 p-2  rounded-full  w-10 mr-4"
                     onPress={() => navigation.goBack()}>
                     <Icon name="arrow-left" size={20} color="black" />
@@ -58,13 +58,13 @@ export default function Hoteles() {
                 <View style={{ alignItems: 'center', marginTop: 6 }}>
                     {hoteles.map((hotel, index) => (
                         <TouchableOpacity key={index} onPress={() => goToHotelDetail(hotel.hotelId)} style={{ marginBottom: 8 }}>
-                            <View style={{ width: 335, height: 106, borderRadius: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 1, shadowRadius: 8, elevation: 3, flexDirection: 'row', backgroundColor: '#ffffff' }}>
-                                <View style={{ padding: 8 }}>
-                                    <Image source={require('../assets/images/hotel.jpg')} style={{ borderRadius: 15, width: 110, height: 90 }} />
+                            <View  style={{ width: '95%', height: 'auto', borderRadius: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 1, shadowRadius: 8, elevation: 3, flexDirection: 'row', backgroundColor: '#ffffff' }}>
+                                <View style={{ paddingTop: 8, paddingLeft:8, paddingRight:8, paddingBottom:2 }}>
+                                    <Image source={require('../assets/images/hotel-1.jpg')} style={{ borderRadius: 15, width: 110, height: 100 }} />
                                 </View>
                                 <View style={{ padding: 8, flex: 1 }}>
                                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{hotel.hotelName}</Text>
-                                    <Text style={{ width: 200 }}>{truncateDescription(hotel.description, 110)}</Text>
+                                    <Text style={{ width: '90%' }}>{truncateDescription(hotel.description, 110)}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
