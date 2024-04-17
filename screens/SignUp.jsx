@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, Modal, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
-import DatePicker from 'react-native-modern-datepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { getFormatedDate } from 'react-native-modern-datepicker';
 import { RadioButton } from 'react-native-paper';
 import moment from 'moment';
@@ -17,13 +17,31 @@ export default function SignUp() {
   const [lastNameValue, setLastNameValue] = useState('');
   const [surnameValue, setSurnameValue] = useState('');
   const [curpValue, setCurpValue] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [gender, setGender] = useState('hombre'); // Estado para almacenar el género seleccionado
+
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
 
   const handleSignUp = async () => {
     if (!emailValue || !passwordValue || !nameValue || !lastNameValue || !surnameValue || !curpValue) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
-    } 
-    const formattedDate = moment(selectedStartDate, 'YYYY/MM/DD').format('YYYY-MM-DD');
+    }
+    const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
     const userData = {
       email: emailValue,
       password: passwordValue,
@@ -40,7 +58,7 @@ export default function SignUp() {
 
     console.log(userData);
     try {
-      const response = await fetch(URL+'api/user/save', {
+      const response = await fetch(URL + 'api/user/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -51,7 +69,7 @@ export default function SignUp() {
       if (response.ok) {
         Alert.alert('Registro exitoso', 'Usuario registrado exitosamente', [
           { text: 'OK', onPress: () => navigation.navigate('Login') }
-        ]);        console.log('Usuario registrado exitosamente');
+        ]); console.log('Usuario registrado exitosamente');
       } else {
         console.error('Error al registrar usuario');
       }
@@ -62,26 +80,6 @@ export default function SignUp() {
 
 
 
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const today = new Date();
-
-  const startDate = getFormatedDate(today.setDate(today.getDate() + 1), "yyyy-mm-dd");
-  const [selectedStartDate, setSelectedStartDate] = useState("");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
-  const [gender, setGender] = useState('hombre'); // Estado para almacenar el género seleccionado
-
-  function handleChangeStartDate(propDate) {
-    setStartedDate(propDate);
-  }
-
-
-  const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
-  };
-
-  const handleOnCloseStartDatePicker = () => {
-    setOpenStartDatePicker(false);
-  };
 
 
 
@@ -107,7 +105,7 @@ export default function SignUp() {
             <Icon name="arrow-left" size={20} color="black" />
           </TouchableOpacity>
 
-          <Text className=" text-3xl font-bold mb-8">
+          <Text className=" text-3xl font-bold mb-4">
             Registrarse
           </Text>
 
@@ -149,53 +147,15 @@ export default function SignUp() {
             </View>
           </View>
 
-          <TouchableOpacity className="p-4 bg-gray-100 text-gray-700 rounded-lg  h-12" onPress={handleOnPressStartDate} style={{ borderBottomWidth: 2, borderColor: '#4181E1' }}>
-            <Text>
-              {selectedStartDate}
-            </Text>
+          <TouchableOpacity onPress={showDatePicker} className="p-3 bg-gray-100 text-gray-700 rounded-lg  h-12" style={{ borderBottomWidth: 2, borderColor: '#4181E1', padding: 10 }}>
+            <Text>{selectedDate ? moment(selectedDate).format('YYYY-MM-DD') : 'Selecciona una fecha'}</Text>
           </TouchableOpacity>
-          <Modal animationType="slide" transparent={true} visible={openStartDatePicker}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <View style={{
-                backgroundColor: '#429aba', alignItems: 'center', justifyContent: 'center', borderRadius: 20, padding: 10, width: '90%',
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-              }}>
-                <DatePicker
-                  mode='calendar'
-                  minimumDate={null}
-                  selected={startedDate}
-                  onDateChanged={handleChangeStartDate}
-                  onSelectedChange={date => setSelectedStartDate(date)}
-                  options={{
-                    backgroundColor: '#429aba',
-                    textHeaderColor: '#ffffff',
-                    textDefaultColor: '#ffffff',
-                    selectedTextColor: '#fff',
-                    mainColor: '#fbc816',
-                    textSecondaryColor: '#FFFFFF',
-                    borderColor: '#fbc816',
-                    textDayFontSize: 20,
-                    textMonthFontSize: 20,
-                    textYearFontSize: 20,
-                    showYearPicker: true,
-                    locale: 'es',
-                  }}
-                />
-
-                <TouchableOpacity onPress={handleOnCloseStartDatePicker} className="border border-[#fbc816] w-16 h-10 rounded-xl">
-                  <Text className="text-center" style={{ color: 'white', marginTop: 10 }}>Cerrar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
 
           <TouchableOpacity className="py-3 bg-yellow-400 rounded-xl" onPress={handleSignUp}>
             <Text className="font-xl font-bold text-center text-gray-700">

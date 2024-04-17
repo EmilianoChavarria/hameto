@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { URL } from './ip';
 
 export default function Hoteles() {
@@ -32,9 +33,15 @@ export default function Hoteles() {
         return description;
     };
 
-    const goToHotelDetail = (hotelId) => {
-        navigation.navigate('Hotel', { hotelId: hotelId });
+    const goToHotelDetail = async (hotelId) => {
+        try {
+            await AsyncStorage.setItem('selectedHotelId', hotelId.toString());
+            navigation.navigate('Hotel', { hotelId: hotelId });
+        } catch (error) {
+            console.error('Error al guardar el hotelId en AsyncStorage:', error);
+        }
     };
+
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -57,7 +64,9 @@ export default function Hoteles() {
             <ScrollView>
                 <View style={{ alignItems: 'center', marginTop: 6 }}>
                     {hoteles.map((hotel, index) => (
+                        
                         <TouchableOpacity key={index} onPress={() => goToHotelDetail(hotel.hotelId)} style={{ marginBottom: 8 }}>
+                        
                             <View  style={{ width: '95%', height: 'auto', borderRadius: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 1, shadowRadius: 8, elevation: 3, flexDirection: 'row', backgroundColor: '#ffffff' }}>
                                 <View style={{ paddingTop: 8, paddingLeft:8, paddingRight:8, paddingBottom:2 }}>
                                     <Image source={require('../assets/images/hotel-1.jpg')} style={{ borderRadius: 15, width: 110, height: 100 }} />

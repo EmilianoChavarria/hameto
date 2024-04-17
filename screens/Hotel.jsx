@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import { URL } from './ip';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Hotel() {
     const [hotel, setHotel] = useState([]);
@@ -32,6 +33,8 @@ export default function Hotel() {
                 if (data.status === 'OK') {
                     setHotel(data.data);
                     setImages(data.data.images);
+                    AsyncStorage.setItem('hotelName', data.data.hotelName);
+
                 } else {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
@@ -43,6 +46,7 @@ export default function Hotel() {
             .then(data => {
                 if (data.status === 'OK') {
                     setHabitaciones(data.data);
+                    console.log("Habitaciones:", data.data);
                 } else {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
@@ -66,6 +70,10 @@ export default function Hotel() {
 
     const goToRoom = (roomId) => {
         navigation.navigate('Room', { roomId: roomId });
+    };
+
+    const goToReservation = (roomId) => {
+        navigation.navigate('Reservacion', { roomId: roomId });
     };
 
     return (
@@ -147,7 +155,13 @@ export default function Hotel() {
                             <View className="bg-white mb-4" style={{ width: '100%', borderRadius: 20 }}>
                                 <Image source={require('../assets/images/cuarto.jpg')} style={{ width: '%90', height: 150, borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
                                 <View className="p-4">
-                                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{habitacion.roomName}</Text>
+                                    <View className="flex flex-row items-center justify-between">
+                                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{habitacion.roomName}</Text>
+                                        <Text
+                                            className="bg-yellow-400 text-black p-1 rounded-lg"
+                                        >
+                                            {habitacion.type.typeName}</Text>
+                                    </View>
                                     <Text>{habitacion.description}</Text>
                                     <View className="flex flex-row items-center ">
                                         <Image source={require('../assets/images/persona.png')} style={{ width: 18, height: 18 }} />
@@ -165,8 +179,8 @@ export default function Hotel() {
 
                                 </View>
                                 <View className="border-t border-gray-300 w-full py-4">
-                                    <Text className="px-4 pb-4 font-bold text-2xl"> MXN $1,234</Text>
-                                    <TouchableOpacity className="flex items-center" onPress={()=> navigation.navigate('Reservacion')}>
+                                    <Text className="px-4 pb-4 font-bold text-2xl"> MXN ${habitacion.type.price}</Text>
+                                    <TouchableOpacity className="flex items-center" onPress={() => goToReservation(habitacion.roomId)}>
                                         <Text className="text-center text-black bg-yellow-400 p-2 rounded-xl w-11/12">
                                             Reservar
                                         </Text>

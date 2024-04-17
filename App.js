@@ -12,6 +12,7 @@ import Hotel from './screens/Hotel';
 import Habitacion from './screens/Habitacion';
 import Ejemplo from './screens/ejemplo';
 import Reservacion from './screens/Reservacion';
+import Reservaciones from './screens/ReservacionesUser';
 const Stack = createStackNavigator();
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="Room" component={Habitacion} screenOptions={{headerShown: false}}/>
         <Stack.Screen name="Ej" component={Ejemplo} screenOptions={{headerShown: false}}/>
         <Stack.Screen name="Reservacion" component={Reservacion} screenOptions={{headerShown: false}}/>
+        <Stack.Screen name="Reservaciones" component={Reservaciones} screenOptions={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
 

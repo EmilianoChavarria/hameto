@@ -3,17 +3,20 @@ import React, { useEffect, useRef, useState } from 'react'
 import Icon from 'react-native-vector-icons/Entypo';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { URL } from './ip';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Habitacion() {
     const [habitaciones, setHabitaciones] = useState([]);
+    const [images, setImages] = useState([]);
+
     const navigation = useNavigation();
     const route = useRoute();
     const { roomId } = route.params;
-    const images = [
-        'https://foodandtravel.mx/wp-content/uploads/2020/06/Reapertura-hoteles-por.jpg',
-        'https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg',
-        'https://cdn.forbes.com.mx/2020/07/hoteles-Grand-Velas-Resorts-e1596047698604.jpg',
-    ];
+    // const images = [
+    //     'https://foodandtravel.mx/wp-content/uploads/2020/06/Reapertura-hoteles-por.jpg',
+    //     'https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg',
+    //     'https://cdn.forbes.com.mx/2020/07/hoteles-Grand-Velas-Resorts-e1596047698604.jpg',
+    // ];
     const scrollX = useRef(new Animated.Value(0)).current;
     const { width: windowWidth } = useWindowDimensions();
 
@@ -24,6 +27,9 @@ export default function Habitacion() {
             .then(data => {
                 if (data.status === 'OK') {
                     setHabitaciones(data.data);
+                    setImages(data.data.images);
+                    AsyncStorage.setItem('roomName', data.data.roomName);
+
                 } else {
                     console.error('Error en la respuesta del servidor:', data.mensaje);
                 }
@@ -54,8 +60,8 @@ export default function Habitacion() {
                         scrollEventThrottle={1}>
                         {images.map((image, imageIndex) => {
                             return (
-                                <View style={{ width: windowWidth, height: 250, overflow: 'hidden' }} key={imageIndex}>
-                                    <ImageBackground source={{ uri: image }} style={[styles.card, { width: windowWidth }]} />
+                                <View style={{ width: windowWidth, height: 350, overflow: 'hidden' }} key={imageIndex}>
+                                    <ImageBackground source={{ uri: `data:image/png;base64,${image.image}` }} style={[styles.card, { width: windowWidth }]} />
                                 </View>
                             );
                         })}
